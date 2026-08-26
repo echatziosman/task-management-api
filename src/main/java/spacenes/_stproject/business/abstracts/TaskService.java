@@ -5,6 +5,9 @@ import java.util.List;
 import spacenes._stproject.core.utilities.results.DataResult;
 import spacenes._stproject.core.utilities.results.Result;
 import spacenes._stproject.entities.concretes.Task;
+import spacenes._stproject.entities.dtos.TaskRequest;
+import spacenes._stproject.entities.dtos.TaskResponse;
+import spacenes._stproject.entities.dtos.TaskUpdateRequest;
 
 public interface TaskService {
 
@@ -15,6 +18,10 @@ public interface TaskService {
 	DataResult<List<Task>> getAllTasksSorted ();
 	
 	Result add(Task task);
+	
+	DataResult<TaskResponse> createTaskWithDto (TaskRequest request);
+	
+	DataResult<TaskResponse> updateTaskWithDto (Long id, TaskUpdateRequest request);
 	
     DataResult<Task> getByTitle(String title);
 	

@@ -2,7 +2,6 @@ package spacenes._stproject.business.concretes;
 
 import java.util.List;
 
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,9 @@ import spacenes._stproject.core.utilities.results.SuccessDataResult;
 import spacenes._stproject.core.utilities.results.SuccessResult;
 import spacenes._stproject.dataAccess.abstracts.TaskRepository;
 import spacenes._stproject.entities.concretes.Task;
+import spacenes._stproject.entities.dtos.TaskRequest;
+import spacenes._stproject.entities.dtos.TaskResponse;
+import spacenes._stproject.entities.dtos.TaskUpdateRequest;
 
 @Service
 public class TaskManager implements TaskService{
@@ -68,6 +70,60 @@ public class TaskManager implements TaskService{
 		Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
 		
 		return new SuccessDataResult<List<Task>>(this.taskRepository.findAll(sort), "Veriler sıralı getirildi");
+	}
+
+	@Override
+	public DataResult<TaskResponse> createTaskWithDto(TaskRequest request) {
+		
+		Task task = new Task();
+		
+	    task.setTitle(request.getTitle());
+	    task.setDescription(request.getDescription());
+	    
+	    Task savedTask = this.taskRepository.save(task);
+	    
+	    TaskResponse response = new TaskResponse();
+	    
+	    response.setId(savedTask.getId());
+	    response.setTitle(savedTask.getTitle());
+	    response.setDescription(savedTask.getDescription());
+	    response.setCompleted(savedTask.isCompleted());
+	    response.setCreatedAt(savedTask.getCreatedAt());
+	    response.setUpdatedAt(savedTask.getUpdatedAt());
+	    
+		return new SuccessDataResult<TaskResponse>(response, "dto'lu Task eklendi");
+	}
+
+	@Override
+	public DataResult<TaskResponse> updateTaskWithDto(Long id, TaskUpdateRequest request) {
+		
+		Task task = this.taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+		
+		if(request.getTitle() != null) {
+			
+			task.setTitle(request.getTitle());
+		}
+		
+		if(request.getDescription() != null) {
+			
+			task.setDescription(request.getDescription());
+		}
+		
+		if(request.getCompleted() != null) {
+			
+			task.setCompleted(request.getCompleted());
+		}
+		
+		Task updatedTask = this.taskRepository.save(task);
+		
+		TaskResponse response = new TaskResponse();
+		
+		response.setId(updatedTask.getId());
+		response.setTitle(updatedTask.getTitle());
+		response.setDescription(updatedTask.getDescription());
+		response.setCompleted(updatedTask.isCompleted()); 
+		
+		return new SuccessDataResult<TaskResponse>(response, "Task Update edildi");
 	}
 
 }

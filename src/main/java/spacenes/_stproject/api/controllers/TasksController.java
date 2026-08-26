@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,9 @@ import spacenes._stproject.business.abstracts.TaskService;
 import spacenes._stproject.core.utilities.results.DataResult;
 import spacenes._stproject.core.utilities.results.Result;
 import spacenes._stproject.entities.concretes.Task;
+import spacenes._stproject.entities.dtos.TaskRequest;
+import spacenes._stproject.entities.dtos.TaskResponse;
+import spacenes._stproject.entities.dtos.TaskUpdateRequest;
 
 
 @RestController
@@ -39,6 +44,18 @@ public class TasksController {
     public Result add(@RequestBody Task task) {
     	
     	return this.taskService.add(task);
+    }
+    
+    @PostMapping("/createTaskWithDto")
+    public DataResult<TaskResponse> createTaskWithDto (@RequestBody TaskRequest request){
+    	
+    	return this.taskService.createTaskWithDto(request);
+    }
+    
+    @PatchMapping("/{id}")
+    public DataResult<TaskResponse> updateTaskWithDto (@PathVariable Long id,@RequestBody TaskUpdateRequest request){
+    	
+    	return this.taskService.updateTaskWithDto(id, request);
     }
     
     @GetMapping("/getByTitle")
