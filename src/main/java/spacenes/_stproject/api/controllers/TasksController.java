@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import spacenes._stproject.business.abstracts.TaskService;
 import spacenes._stproject.core.utilities.results.DataResult;
 import spacenes._stproject.core.utilities.results.Result;
@@ -47,13 +48,13 @@ public class TasksController {
     }
     
     @PostMapping("/createTaskWithDto")
-    public DataResult<TaskResponse> createTaskWithDto (@RequestBody TaskRequest request){
+    public DataResult<TaskResponse> createTaskWithDto (@Valid @RequestBody TaskRequest request){
     	
     	return this.taskService.createTaskWithDto(request);
     }
     
     @PatchMapping("/{id}")
-    public DataResult<TaskResponse> updateTaskWithDto (@PathVariable Long id,@RequestBody TaskUpdateRequest request){
+    public DataResult<TaskResponse> updateTaskWithDto (@PathVariable Long id,@Valid @RequestBody TaskUpdateRequest request){
     	
     	return this.taskService.updateTaskWithDto(id, request);
     }
