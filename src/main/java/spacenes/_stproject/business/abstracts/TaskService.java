@@ -23,7 +23,9 @@ public interface TaskService {
 	
 	DataResult<TaskResponse> updateTaskWithDto (Long id, TaskUpdateRequest request);
 	
-    DataResult<Task> getByTitle(String title);
+    DataResult<List<Task>> getByTitle(String title);
 	
 	DataResult<List<Task>> getByTitleContains(String title);
+	
+	Result delete(Long id);
 }

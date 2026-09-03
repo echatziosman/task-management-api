@@ -9,7 +9,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import spacenes._stproject.business.abstracts.TaskService;
+import spacenes._stproject.core.utilities.exceptions.TaskNotFoundException;
 import spacenes._stproject.core.utilities.results.DataResult;
+import spacenes._stproject.core.utilities.results.ErrorDataResult;
 import spacenes._stproject.core.utilities.results.Result;
 import spacenes._stproject.core.utilities.results.SuccessDataResult;
 import spacenes._stproject.core.utilities.results.SuccessResult;
@@ -45,15 +47,34 @@ public class TaskManager implements TaskService{
 	}
 
 	@Override
-	public DataResult<Task> getByTitle(String title) {
+	public DataResult<List<Task>> getByTitle(String title) {
 		
-		return new SuccessDataResult<Task>(this.taskRepository.getByTitle(title), "Task getirildi");
-	}
+		List<Task> task = this.taskRepository.getByTitle(title);
+		
+	    
+	    	if(task.isEmpty()){
+	    		
+	    		throw new TaskNotFoundException("Task not found with title: " +title);
+	    	}
+		    else
+			
+			   return new SuccessDataResult<List<Task>>(task,"Tasks/task found");
+		}
+		
 
 	@Override
 	public DataResult<List<Task>> getByTitleContains(String title) {
 		
-		return new SuccessDataResult<List<Task>>(this.taskRepository.getByTitleContains(title) , "Task'lar getirildi");
+		List<Task> task = this.taskRepository.getByTitleContains(title);
+		
+		if(task.isEmpty())
+		{
+			throw new TaskNotFoundException("Task not found with title: "+title);
+		}
+		else {
+			return new SuccessDataResult<List<Task>>("Task(s) found");
+		}
+	
 	}
 
 	@Override
@@ -97,7 +118,7 @@ public class TaskManager implements TaskService{
 	@Override
 	public DataResult<TaskResponse> updateTaskWithDto(Long id, TaskUpdateRequest request) {
 		
-		Task task = this.taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+		Task task = this.taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found with id: "+id));
 		
 		if(request.getTitle() != null) {
 			
@@ -124,6 +145,17 @@ public class TaskManager implements TaskService{
 		response.setCompleted(updatedTask.isCompleted()); 
 		
 		return new SuccessDataResult<TaskResponse>(response, "Task Update edildi");
+	}
+
+	@Override
+	public Result delete(Long id) {
+		
+		Task task = this.taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not Found with id: "+id));
+		
+		this.taskRepository.delete(task);
+		
+		return new SuccessResult("Task successfully deleted");
+		
 	}
 
 }

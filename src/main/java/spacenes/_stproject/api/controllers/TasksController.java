@@ -3,6 +3,9 @@ package spacenes._stproject.api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,9 +51,13 @@ public class TasksController {
     }
     
     @PostMapping("/createTaskWithDto")
-    public DataResult<TaskResponse> createTaskWithDto (@Valid @RequestBody TaskRequest request){
+    public ResponseEntity<DataResult<TaskResponse>> createTaskWithDto (@Valid @RequestBody TaskRequest request){
     	
-    	return this.taskService.createTaskWithDto(request);
+    	DataResult<TaskResponse> result = this.taskService.createTaskWithDto(request);
+    	
+    	return ResponseEntity
+    			.status(HttpStatus.CREATED)
+    			.body(result);
     }
     
     @PatchMapping("/{id}")
@@ -60,7 +67,7 @@ public class TasksController {
     }
     
     @GetMapping("/getByTitle")
-    public DataResult<Task> getByTitle(@RequestParam  String title){
+    public DataResult<List<Task>> getByTitle(@RequestParam  String title){
     	
     	return this.taskService.getByTitle(title);
     }
@@ -79,5 +86,13 @@ public class TasksController {
     public DataResult<List<Task>> getAllTasksSorted (){
     	
     	return this.taskService.getAllTasksSorted();
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Result> delete (@PathVariable Long id) {
+    	
+    	Result result = this.taskService.delete(id);
+    	
+    	return ResponseEntity.ok(result);
     }
 }
