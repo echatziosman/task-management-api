@@ -72,7 +72,7 @@ public class TaskManager implements TaskService{
 			throw new TaskNotFoundException("Task not found with title: "+title);
 		}
 		else {
-			return new SuccessDataResult<List<Task>>("Task(s) found");
+			return new SuccessDataResult<List<Task>>(task, "Task(s) found");
 		}
 	
 	}
