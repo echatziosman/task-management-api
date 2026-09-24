@@ -2,7 +2,6 @@ package spacenes._stproject.business.concretes;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import spacenes._stproject.business.abstracts.TaskService;
 import spacenes._stproject.core.utilities.exceptions.TaskNotFoundException;
 import spacenes._stproject.core.utilities.results.DataResult;
-import spacenes._stproject.core.utilities.results.ErrorDataResult;
 import spacenes._stproject.core.utilities.results.Result;
 import spacenes._stproject.core.utilities.results.SuccessDataResult;
 import spacenes._stproject.core.utilities.results.SuccessResult;
@@ -26,7 +24,6 @@ public class TaskManager implements TaskService{
 	
 	private TaskRepository taskRepository;
 
-	@Autowired
 	public TaskManager(TaskRepository taskRepository) {
 		super();
 		this.taskRepository = taskRepository;
@@ -56,7 +53,6 @@ public class TaskManager implements TaskService{
 	    		
 	    		throw new TaskNotFoundException("Task not found with title: " +title);
 	    	}
-		    else
 			
 			   return new SuccessDataResult<List<Task>>(task,"Tasks/task found");
 		}
@@ -143,6 +139,8 @@ public class TaskManager implements TaskService{
 		response.setTitle(updatedTask.getTitle());
 		response.setDescription(updatedTask.getDescription());
 		response.setCompleted(updatedTask.isCompleted()); 
+		response.setCreatedAt(updatedTask.getCreatedAt());	
+		response.setUpdatedAt(updatedTask.getUpdatedAt());
 		
 		return new SuccessDataResult<TaskResponse>(response, "Task Update edildi");
 	}

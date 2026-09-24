@@ -2,7 +2,6 @@ package spacenes._stproject.api.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +30,7 @@ public class TasksController {
 	
 	private TaskService taskService;
 	
-    @Autowired
+    
 	public TasksController(TaskService taskService) { 
 		super();
 		this.taskService = taskService;
@@ -78,8 +77,8 @@ public class TasksController {
     }
     
     @GetMapping("/getAllByPage")
-    public DataResult<List<Task>> getAllTasks (int PageNo, int PageSize){
-    	return this.taskService.getAllTasks(PageNo, PageSize);
+    public DataResult<List<Task>> getAllTasks (@RequestParam int pageNo, @RequestParam int pageSize){
+    	return this.taskService.getAllTasks(pageNo, pageSize);
     }
     
     @GetMapping("/getAllSorted")
